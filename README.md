@@ -17,3 +17,5 @@ Integrantes:
 - Juan Pablo Mora Palacios
 
 - Andres Felipe Quintero Bautista
+
+- Jean Sebastian Ruiz Saldaña
