@@ -1,0 +1,24 @@
+type Query {
+  usuarios: [Usuario!]
+}
+
+type Mutation {
+  createUsuario(
+    cedula: String!
+    nombre: String!
+    correo: String!
+    contrasena: String!
+    rol: String!
+    estado: String!
+  ): Usuario
+}
+
+type Usuario {
+  _id: ID!
+  cedula: String!
+  nombre: String!
+  correo: String!
+  contrasena: String!
+  rol: String!
+  estado: String!
+}
