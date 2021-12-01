@@ -1,4 +1,4 @@
-const db = require('../../db/connection')
+const db = require('../../db/connection');
 
 // Resolver de los schemas de modelos, tal cual
 const rootRegister = {

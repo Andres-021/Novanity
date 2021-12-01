@@ -7,8 +7,13 @@ const client = new MongoClient(url ,{
 });
 
 const db = async() => {
-    await client.connect();
-    return client.db('proyectos_investigacion');
+    try{
+        await client.connect();
+        console.log('Conectado a la base de datos.')
+        return client.db('proyectos_investigacion');
+    }catch{
+        console.log('Error al conectar a la base de datos.')
+    }
 };
 
 
