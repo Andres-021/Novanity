@@ -7,12 +7,12 @@ const app = express();
 
 //Importacion de modulos creados
 //Login
-const schemaLogin = require('./gestionUsuarios/models/authentication');
-const rootLogin = require('./gestionUsuarios/resolvers/authentication');
+const schemaLogin = require('./models/usuarios/authentication');
+const rootLogin = require('./resolvers/usuarios/authentication');
 
 //Register
-const schemaRegister = require('./gestionUsuarios/models/registration');
-const rootRegister = require('./gestionUsuarios/resolvers/registration')
+const schemaRegister = require('./models/usuarios/registration');
+const rootRegister = require('./resolvers/usuarios/registration')
 
 //Aqui se pone el archivo que tenga las rutas del modulo o las peticiones
 app.use(require('./routers/index'));
