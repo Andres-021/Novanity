@@ -5,17 +5,6 @@ type Query {
   proyectos: [Proyecto]
 }
 
-type Mutation {
-  createUsuario(
-    cedula: String!
-    nombre: String!
-    correo: String!
-    contrasena: String!
-    rol: String!
-    estado: String!
-  ): Usuario
-}
-
 type Usuario {
   _id: ID!
   cedula: String!
@@ -24,6 +13,21 @@ type Usuario {
   contrasena: String!
   rol: String!
   estado: String!
+}
+# Manera de hacer un create.
+input InputUsuario{
+  cedula: String!
+  nombre: String!
+  correo: String!
+  contrasena: String!
+  rol: String!
+  estado: String!
+}
+
+type Mutation {
+  # Se llama al InputUsuario y se especifica que ese sera el contenido.
+  createUsuario(content: InputUsuario!): Usuario
+  updateUsuario(_id: ID, cedula: String!, nombre: String!, correo: String!, contrasena: String!, rol: String!, estado: String!): Usuario
 }
 
 type Proyecto {

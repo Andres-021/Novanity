@@ -30,6 +30,6 @@ const usuarioSchema = new Schema({
   estado: {
     type: String,
     required: true,
-  },
+  }
 });
 export default model("usuarios", usuarioSchema);
