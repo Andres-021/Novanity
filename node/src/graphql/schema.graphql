@@ -1,0 +1,59 @@
+scalar Date
+
+type Query {
+  usuarios: [Usuario!]
+  proyectos: [Proyecto]
+}
+
+type Mutation {
+  createUsuario(
+    cedula: String!
+    nombre: String!
+    correo: String!
+    contrasena: String!
+    rol: String!
+    estado: String!
+  ): Usuario
+}
+
+type Usuario {
+  _id: ID!
+  cedula: String!
+  nombre: String!
+  correo: String!
+  contrasena: String!
+  rol: String!
+  estado: String!
+}
+
+type Proyecto {
+  _id: ID!
+  nombre_proyecto: String!
+  objetivos_generales: String!
+  objetivos_especificos: String!
+  presupuesto: Int!
+  fecha_ini: Date
+  fecha_final: Date
+  id_lider: String!
+  nombre_lider: String!
+  estado_inscripcion: String!
+  estado_proyecto: String
+  fase: String
+  inscripciones_estudiantes: [InscripEstudiante]
+  avances: [Avances]
+}
+
+type InscripEstudiante {
+  _id: ID!
+  id_estudiante: ID!
+  nombre_estudiante: String!
+  estado: String!
+}
+
+type Avances {
+  _id: ID!
+  id_estudiante: ID!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
+}

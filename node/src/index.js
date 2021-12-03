@@ -1,12 +1,7 @@
-const db = require('./db/connection');
-//Aqui haremos uso de express
-const app = require('./app');
+import { server } from "./server.js";
+import "./database.js";
 
-const main = async() =>{
-    console.log('Server on')
-    return app.listen(5000);
-}
-
-db();
-
-main()
+server.start({ port: 4000 }, ({ port }) => {
+  console.log("El servicio está en el puerto", port);
+});
+console.log("hola");
