@@ -4,8 +4,12 @@ const Mutation = {
   // Resolver de createUsuario en el schema para realizar el registro
   // En el content estarian todos los datos de usuario
   createUsuario: async (_,{content}) => {
-    const newUsuario = new Usuario(content);
-    return await newUsuario.save();
+    try{
+
+      const newUsuario = new Usuario(content);
+      return await newUsuario.save();
+    }catch{
+    }
   },
 
   updateUsuario: async (_,{ _id, cedula, nombre, correo, contrasena, rol, estado }) => {
@@ -17,6 +21,20 @@ const Mutation = {
       rol,
       estado
     }
+
+
+
+    // Usuario.updateOne(id, {
+    //   $push:{
+    //     "avances":{
+    //       $each:[{
+    //         "descripcion":"saque a paser al perro",
+    //         "descripcion":"saque a paser al perro",
+    //         "descripcion":"saque a paser al perro"
+    //       }]
+    //     }
+    //   }
+    // });
     return await Usuario.findByIdAndUpdate(_id, updateUsuario);
   }
 
