@@ -15,7 +15,7 @@ type Usuario {
   estado: String!
 }
 # Manera de hacer un create.
-input InputUsuario{
+input InputUsuario {
   cedula: String!
   nombre: String!
   correo: String!
@@ -27,7 +27,24 @@ input InputUsuario{
 type Mutation {
   # Se llama al InputUsuario y se especifica que ese sera el contenido.
   createUsuario(content: InputUsuario!): Usuario
-  updateUsuario(_id: ID, cedula: String!, nombre: String!, correo: String!, contrasena: String!, rol: String!, estado: String!): Usuario
+  updateUsuario(
+    _id: ID
+    cedula: String!
+    nombre: String!
+    correo: String!
+    contrasena: String!
+    rol: String!
+    estado: String!
+  ): Usuario
+  editUsuario(
+    _id: ID!
+    cedula: String
+    nombre: String
+    correo: String
+    contrasena: String
+    rol: String
+    estado: String
+  ): Usuario
 }
 
 type Proyecto {
