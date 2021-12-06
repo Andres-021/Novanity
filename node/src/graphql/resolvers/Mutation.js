@@ -1,4 +1,5 @@
 import Usuario from "../../models/Usuario.js";
+import Inscripcion from "../../models/InscripEstudiante.js";
 
 const Mutation = {
   // Resolver de createUsuario en el schema para realizar el registro
@@ -6,6 +7,10 @@ const Mutation = {
   createUsuario: async (_, { content }) => {
     const newUsuario = new Usuario(content);
     return await newUsuario.save();
+  },
+  createInscripcion: async (_, { nombre_estudiante, estado }) => {
+    const newInscripcion = new Inscripcion(nombre_estudiante, estado);
+    return await newInscripcion.save();
   },
 
   updateUsuario: async (

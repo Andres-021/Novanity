@@ -3,6 +3,7 @@ scalar Date
 type Query {
   usuarios: [Usuario!]
   proyectos: [Proyecto]
+  inscripciones:[InscripEstudiante]
 }
 
 type Usuario {
@@ -45,6 +46,12 @@ type Mutation {
     rol: String
     estado: String
   ): Usuario
+
+  # Crear inscripcion de estudiante 
+  createInscripcion(nombre_estudiante: String!, estado: String!): InscripEstudiante
+  updateInscripcion(_id: ID!, id_estudiante: ID!, nombre_estudiante: String!,  estado: String!): InscripEstudiante
+  deleteInscripcion( _id: ID! ): InscripEstudiante
+
 }
 
 type Proyecto {
