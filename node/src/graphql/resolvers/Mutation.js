@@ -1,4 +1,5 @@
 import Usuario from "../../models/Usuario.js";
+import Proyecto from "../../models/Proyecto.js";
 
 const Mutation = {
   // Resolver de createUsuario en el schema para realizar el registro
@@ -53,6 +54,24 @@ const Mutation = {
     }
     return usuario.save();
   },
+  addAvance: async(_,{_id,content})=>{
+  //  return await Proyecto.updateOne(id,{
+  //   $push:{
+  //     "avances":{
+  //       $each:[content]
+  //     }
+  //   }{
+  // });
+  try{
+    await Proyecto.findByIdAndUpdate(_id,{
+      $push:{'avances':content}
+    });
+    return content;
+  }catch(err){
+    return err;
+  }
+ 
+  }
 };
 
 export default Mutation;
