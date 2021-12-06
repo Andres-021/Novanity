@@ -52,6 +52,7 @@ type Mutation {
   updateInscripcion(_id: ID!, id_estudiante: ID!, nombre_estudiante: String!,  estado: String!): InscripEstudiante
   deleteInscripcion( _id: ID! ): InscripEstudiante
 
+  addAvance(_id:String,content:agregarAvance!): Avances
 }
 
 type Proyecto {
@@ -84,4 +85,12 @@ type Avances {
   nombre_estudiante: String!
   descripcion: String!
   observaciones: String
+}
+
+input agregarAvance{
+  id_estudiante: ID!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
+
 }
