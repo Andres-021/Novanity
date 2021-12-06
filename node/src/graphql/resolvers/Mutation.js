@@ -59,7 +59,7 @@ const Mutation = {
   //   $push:{
   //     "avances":{
   //       $each:[content]
-  //     }
+  //     }/////
   //   }{
   // });
   try{
