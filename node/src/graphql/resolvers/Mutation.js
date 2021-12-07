@@ -22,9 +22,9 @@ const Mutation = {
     return await newUsuario.save();
   },
 
-  updateUsuario: async (_,{content}) =>{
-    return await Usuario.findByIdAndUpdate(_id, content);
-  },
+  // updateUsuario: async (_,{content}) =>{
+  //   return await Usuario.findByIdAndUpdate(_id, content);
+  // },
 
   editUsuario: async (root, args) => {
     //se crea mutacion para editar uno o varios datos de un registro de la coleccion usuarios ingresando el id -> se agregan los parametros en el schema
@@ -53,6 +53,7 @@ const Mutation = {
       
       // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
       // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
+      await Proyecto.findOneAndUpdate({'id_lider': args._id}, {'nombre_lider': args._id});
       await Proyecto.findOneAndUpdate(
         {'avances.id_estudiante': args._id}, // Buscamos por el id_estudiante en avances
         {$set:{'avances.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
@@ -63,7 +64,7 @@ const Mutation = {
         {$set:{'inscripciones_estudiantes.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
           arrayFilters:[{'elem.id_estudiante': args._id}]
       });
-
+        
       return await usuario.save();
     }catch(e){
       return e;
