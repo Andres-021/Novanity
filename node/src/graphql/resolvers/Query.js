@@ -1,5 +1,7 @@
 import Proyecto from "../../models/Proyecto.js";
 import Usuario from "../../models/Usuario.js";
+import Inscripcion from "../../models/InscripEstudiante.js";
+
 const Query = {
   usuarios: async () => {
     return await Usuario.find();
@@ -7,6 +9,10 @@ const Query = {
 
   proyectos: async () => {
     return await Proyecto.find();
+  },
+
+  inscripciones: async () => {
+    return await Inscripcion.find();
   },
 };
 

@@ -3,6 +3,7 @@ scalar Date
 type Query {
   usuarios: [Usuario!]
   proyectos: [Proyecto]
+  inscripciones:[InscripEstudiante]
 }
 
 type Usuario {
@@ -36,19 +37,35 @@ type InscripEstudiante {
   estado: String!
 }
 
-type Avances {
-  _id: ID
-  id_estudiante: String!
-  nombre_estudiante: String!
-  descripcion: String!
-  observaciones: String
-}
+type Mutation {
+  login(content: InputLogin!): Usuario
+  # Se llama al InputUsuario y se especifica que ese sera el contenido.
+  createUsuario(content: InputUsuario!): Usuario
+  updateUsuario(
+    _id: ID
+    cedula: String!
+    nombre: String!
+    correo: String!
+    contrasena: String!
+    rol: String!
+    estado: String!
+  ): Usuario
+  editUsuario(
+    _id: ID!
+    cedula: String
+    nombre: String
+    correo: String
+    contrasena: String
+    rol: String
+    estado: String
+  ): Usuario
 
-input InputAvances {
-  id_estudiante: String!
-  nombre_estudiante: String!
-  descripcion: String!
-  observaciones: String
+  # Crear inscripcion de estudiante 
+  createInscripcion(nombre_estudiante: String!, estado: String!): InscripEstudiante
+  updateInscripcion(_id: ID!, id_estudiante: ID!, nombre_estudiante: String!,  estado: String!): InscripEstudiante
+  deleteInscripcion( _id: ID! ): InscripEstudiante
+
+  addAvance(_id:String,content:agregarAvance!): Avances
 }
 
 type Proyecto {
@@ -68,20 +85,18 @@ type Proyecto {
   avances: [Avances]
 }
 
-type Mutation {
-  login(content: InputLogin!): Usuario
-  # Se llama al InputUsuario y se especifica que ese sera el contenido.
-  createUsuario(content: InputUsuario!): Usuario
-  updateUsuario(_id: String, content: InputUsuario): Usuario
-  editUsuario(
-    _id: ID!
-    cedula: String
-    nombre: String
-    correo: String
-    contrasena: String
-    rol: String
-    estado: String
-  ): Usuario
+type Avances {
+  _id: ID!
+  id_estudiante: ID!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
+}
 
-  agregarAvances(_id: String, content: InputAvances): Avances
+input agregarAvance{
+  id_estudiante: ID!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
+
 }

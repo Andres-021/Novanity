@@ -1,4 +1,5 @@
 import Usuario from "../../models/Usuario.js";
+import Inscripcion from "../../models/InscripEstudiante.js";
 import Proyecto from "../../models/Proyecto.js";
 
 const Mutation = {
@@ -16,15 +17,28 @@ const Mutation = {
   },
   // Resolver de createUsuario en el schema para realizar el registro
   // En el content estarian todos los datos de usuario
-  createUsuario: async (_,{content}) => {
-    try{
-      // Creamos un nuevo usuario pasandolo al schema que sera almacenado en una variable y
-      // luego lo guardamos el la base de datos con .save()
-      const newUsuario = new Usuario(content);
-      return await newUsuario.save();
-    }catch(e){
-      return e;
-    }
+  createUsuario: async (_, { content }) => {
+    const newUsuario = new Usuario(content);
+    return await newUsuario.save();
+  },
+  createInscripcion: async (_, { nombre_estudiante, estado }) => {
+    const newInscripcion = new Inscripcion(nombre_estudiante, estado);
+    return await newInscripcion.save();
+  },
+
+  updateUsuario: async (
+    _,
+    { _id, cedula, nombre, correo, contrasena, rol, estado }
+  ) => {
+    const updateUsuario = {
+      cedula,
+      nombre,
+      correo,
+      contrasena,
+      rol,
+      estado,
+    };
+    return await Usuario.findByIdAndUpdate(_id, updateUsuario);
   },
 
   editUsuario: async (root, args) => {
@@ -54,18 +68,39 @@ const Mutation = {
       
       // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
       // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
-      await Proyecto.findOneAndUpdate({"id_lider": args._id}, {"nombre_lider": args.nombre});
       await Proyecto.findOneAndUpdate(
         {'avances.id_estudiante': args._id}, // Buscamos por el id_estudiante en avances
         {$set:{'avances.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
-        arrayFilters:[{'elem.id_estudiante': args._id}]
+          arrayFilters:[{'elem.id_estudiante': args._id}]
       });
-      await Proyecto.findOneAndUpdate()
+      await Proyecto.findOneAndUpdate(
+        {'inscripciones_estudiantes.id_estudiante': args._id},  // Buscamos por el id_estudiante en inscripciones
+        {$set:{'inscripciones_estudiantes.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
+          arrayFilters:[{'elem.id_estudiante': args._id}]
+      });
 
       return await usuario.save();
     }catch(e){
       return e;
     }
+  },
+  addAvance: async(_,{_id,content})=>{
+  //  return await Proyecto.updateOne(id,{
+  //   $push:{
+  //     "avances":{
+  //       $each:[content]
+  //     }/////
+  //   }{
+  // });
+    try{
+      await Proyecto.findByIdAndUpdate(_id,{
+        $push:{'avances':content}
+      });
+      return content;
+    }catch(err){
+      return err;
+    }
+  
   }
 };
 
