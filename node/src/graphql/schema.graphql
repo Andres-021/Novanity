@@ -16,35 +16,39 @@ type Usuario {
 }
 # Manera de hacer un create.
 input InputUsuario {
-  cedula: String!
-  nombre: String!
+  cedula: String
+  nombre: String
+  correo: String
+  contrasena: String
+  rol: String
+  estado: String
+}
+
+input InputLogin{
   correo: String!
   contrasena: String!
-  rol: String!
+}
+
+type InscripEstudiante {
+  _id: ID!
+  id_estudiante: ID!
+  nombre_estudiante: String!
   estado: String!
 }
 
-type Mutation {
-  # Se llama al InputUsuario y se especifica que ese sera el contenido.
-  createUsuario(content: InputUsuario!): Usuario
-  updateUsuario(
-    _id: ID
-    cedula: String!
-    nombre: String!
-    correo: String!
-    contrasena: String!
-    rol: String!
-    estado: String!
-  ): Usuario
-  editUsuario(
-    _id: ID!
-    cedula: String
-    nombre: String
-    correo: String
-    contrasena: String
-    rol: String
-    estado: String
-  ): Usuario
+type Avances {
+  _id: ID
+  id_estudiante: String!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
+}
+
+input InputAvances {
+  id_estudiante: String!
+  nombre_estudiante: String!
+  descripcion: String!
+  observaciones: String
 }
 
 type Proyecto {
@@ -64,17 +68,20 @@ type Proyecto {
   avances: [Avances]
 }
 
-type InscripEstudiante {
-  _id: ID!
-  id_estudiante: ID!
-  nombre_estudiante: String!
-  estado: String!
-}
+type Mutation {
+  login(content: InputLogin!): Usuario
+  # Se llama al InputUsuario y se especifica que ese sera el contenido.
+  createUsuario(content: InputUsuario!): Usuario
+  updateUsuario(_id: String, content: InputUsuario): Usuario
+  editUsuario(
+    _id: ID!
+    cedula: String
+    nombre: String
+    correo: String
+    contrasena: String
+    rol: String
+    estado: String
+  ): Usuario
 
-type Avances {
-  _id: ID!
-  id_estudiante: ID!
-  nombre_estudiante: String!
-  descripcion: String!
-  observaciones: String
+  agregarAvances(_id: String, content: InputAvances): Avances
 }
