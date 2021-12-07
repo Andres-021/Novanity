@@ -21,24 +21,9 @@ const Mutation = {
     const newUsuario = new Usuario(content);
     return await newUsuario.save();
   },
-  createInscripcion: async (_, { nombre_estudiante, estado }) => {
-    const newInscripcion = new Inscripcion(nombre_estudiante, estado);
-    return await newInscripcion.save();
-  },
 
-  updateUsuario: async (
-    _,
-    { _id, cedula, nombre, correo, contrasena, rol, estado }
-  ) => {
-    const updateUsuario = {
-      cedula,
-      nombre,
-      correo,
-      contrasena,
-      rol,
-      estado,
-    };
-    return await Usuario.findByIdAndUpdate(_id, updateUsuario);
+  updateUsuario: async (_,{content}) =>{
+    return await Usuario.findByIdAndUpdate(_id, content);
   },
 
   editUsuario: async (root, args) => {
@@ -84,6 +69,13 @@ const Mutation = {
       return e;
     }
   },
+
+  
+  createInscripcion: async (_, { nombre_estudiante, estado }) => {
+    const newInscripcion = new Inscripcion(nombre_estudiante, estado);
+    return await newInscripcion.save();
+  },
+
   addAvance: async(_,{_id,content})=>{
   //  return await Proyecto.updateOne(id,{
   //   $push:{
