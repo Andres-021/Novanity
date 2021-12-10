@@ -7,9 +7,6 @@ type Query {
   proyectosLider(id_lider: ID!): [Proyecto]
   proyectoId(_id: ID!): [Proyecto]
 }
-type Succes{
-  succes: Boolean!
-}
 
 type Login {
   success: Boolean!
