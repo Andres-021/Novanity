@@ -1,9 +1,19 @@
 scalar Date
 
 type Query {
+  login(correo: String!, contrasena: String!): Login
   usuarios: [Usuario!]
   proyectos: [Proyecto]
   inscripciones:[InscripEstudiante]
+}
+type Succes{
+  succes: Boolean!
+}
+
+type Login {
+  success: Boolean!
+  user: Usuario
+  token: String
 }
 
 type Usuario {
@@ -15,20 +25,6 @@ type Usuario {
   rol: String!
   estado: String!
 }
-# Manera de hacer un create.
-input InputUsuario {
-  cedula: String
-  nombre: String
-  correo: String
-  contrasena: String
-  rol: String
-  estado: String
-}
-
-input InputLogin{
-  correo: String!
-  contrasena: String!
-}
 
 type InscripEstudiante {
   _id: ID!
@@ -38,18 +34,25 @@ type InscripEstudiante {
 }
 
 type Mutation {
-  login(content: InputLogin!): Usuario
-  # Se llama al InputUsuario y se especifica que ese sera el contenido.
-  createUsuario(content: InputUsuario!): Usuario
+  estadoUsuario(_id: ID! estado: String): Usuario
+  createUsuario(
+    cedula: String
+    nombre: String
+    correo: String
+    contrasena: String
+    rol: String
+    estado: String
+  ): Usuario
+  
   updateUsuario(
     _id: ID
     cedula: String!
     nombre: String!
     correo: String!
     contrasena: String!
-    rol: String!
     estado: String!
   ): Usuario
+
   editUsuario(
     _id: ID!
     cedula: String

@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 
 mongoose
   .connect(
-    "mongodb+srv://novanity:novanity_123@novanitydatabase.q8wgs.mongodb.net/proyectos_investigacion?retryWrites=true&w=majority",
+    process.env.DATABASE,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,

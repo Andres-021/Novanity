@@ -3,28 +3,33 @@ import Inscripcion from "../../models/InscripEstudiante.js";
 import Proyecto from "../../models/Proyecto.js";
 
 const Mutation = {
-  login: async(_,{content}) => {
-    try{
-      // Se hace la busqueda del usuario a registrar en caso de encontrarlo retornamos los valores
-      return await Usuario.findOne({
-        "correo": content.correo,
-        "contrasena": content.contrasena
-      });
-      // console.log(res);
-    }catch(e){
-      return e;
-    }
-  },
+
   // Resolver de createUsuario en el schema para realizar el registro
   // En el content estarian todos los datos de usuario
-  createUsuario: async (_, { content }) => {
-    const newUsuario = new Usuario(content);
+  createUsuario: async (_, {cedula, nombre, correo, contrasena, rol, estado}) => {
+    const newUsuario = new Usuario({cedula, nombre, correo, contrasena, rol, estado });
     return await newUsuario.save();
   },
 
   // updateUsuario: async (_,{content}) =>{
   //   return await Usuario.findByIdAndUpdate(_id, content);
   // },
+  
+
+  estadoUsuario: async(_,{_id, estado}) => {
+    try{
+      // Se hace la busqueda del usuario a registrar en caso de encontrarlo retornamos los valores
+      const user = await Usuario.findByIdAndUpdate(_id, {'estado': estado})
+
+      if(user){
+
+        return user
+      }else return null; // Si falla el if, user retorna null
+      // console.log(res);
+    }catch(e){
+      return e;
+    }
+  },
 
   editUsuario: async (root, args) => {
     //se crea mutacion para editar uno o varios datos de un registro de la coleccion usuarios ingresando el id -> se agregan los parametros en el schema
@@ -51,21 +56,30 @@ const Mutation = {
         usuario.estado = args.estado;
       }
       
-      // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
-      // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
-      await Proyecto.findOneAndUpdate({'id_lider': args._id}, {'nombre_lider': args._id});
-      await Proyecto.findOneAndUpdate(
-        {'avances.id_estudiante': args._id}, // Buscamos por el id_estudiante en avances
-        {$set:{'avances.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
-          arrayFilters:[{'elem.id_estudiante': args._id}]
-      });
-      await Proyecto.findOneAndUpdate(
-        {'inscripciones_estudiantes.id_estudiante': args._id},  // Buscamos por el id_estudiante en inscripciones
-        {$set:{'inscripciones_estudiantes.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
-          arrayFilters:[{'elem.id_estudiante': args._id}]
-      });
-        
-      return await usuario.save();
+      // Como antes de cambiar los datos se realiza una busquda, podemos comparar los roles
+      // para asi saber cual elemento cambiar o modificar.
+
+      if(usuario.rol === 'Lider'){
+        // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
+        // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
+        await Proyecto.findByIdAndUpdate({'id_lider': args._id}, {'nombre_lider': args._id});
+      }
+
+      if(usuario.rol === 'Estudiante'){
+
+        await Proyecto.updateOne({'avances.id_estudiante': args._id}, // Buscamos por el id_estudiante en avances
+          {$set:{'avances.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
+            multi:true,
+            arrayFilters:[{'elem.id_estudiante': args._id}]
+        });
+        await Proyecto.updateOne({'inscripciones_estudiantes.id_estudiante': args._id},  // Buscamos por el id_estudiante en inscripciones
+          {$set:{'inscripciones_estudiantes.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
+            multi: true,
+            arrayFilters:[{'elem.id_estudiante': args._id}]
+        });
+      }
+
+      return await usuario.save(); // Se retorna elemento guardado.
     }catch(e){
       return e;
     }
