@@ -4,7 +4,8 @@ type Query {
   login(correo: String!, contrasena: String!): Login
   usuarios: [Usuario!]
   proyectos: [Proyecto]
-  inscripciones:[InscripEstudiante]
+  proyectosLider(id_lider: ID!): [Proyecto]
+  proyectoId(_id: ID!): [Proyecto]
 }
 type Succes{
   succes: Boolean!
@@ -63,12 +64,49 @@ type Mutation {
     estado: String
   ): Usuario
 
-  # Crear inscripcion de estudiante 
-  createInscripcion(nombre_estudiante: String!, estado: String!): InscripEstudiante
-  updateInscripcion(_id: ID!, id_estudiante: ID!, nombre_estudiante: String!,  estado: String!): InscripEstudiante
-  deleteInscripcion( _id: ID! ): InscripEstudiante
+  addAvance(_id: String, content: agregarAvance!): Avances
 
-  addAvance(_id:String,content:agregarAvance!): Avances
+  editEstadoInscripcion(
+    id_proyecto: ID!
+    id_inscripcion: ID!
+    nuevoEstado: String!
+  ): Proyecto
+
+  agregarInscripcion(
+    _id: ID!
+    id_estudiante: String!
+    nombre_estudiante: String!
+    estado: String!
+  ): Proyecto
+
+  createProyecto(
+    nombre_proyecto: String!
+    objetivos_generales: String!
+    objetivos_especificos: String!
+    presupuesto: Int!
+    fecha_ini: Date
+    fecha_final: Date
+    id_lider: String!
+    nombre_lider: String!
+    estado_inscripcion: String!
+    estado_proyecto: String
+    fase: String
+  ): Proyecto
+
+  editProyecto(
+    _id: ID!
+    nombre_proyecto: String
+    objetivos_generales: String
+    objetivos_especificos: String
+    presupuesto: Int
+    fecha_ini: Date
+    fecha_final: Date
+    id_lider: String
+    nombre_lider: String
+    estado_inscripcion: String
+    estado_proyecto: String
+    fase: String
+  ): Proyecto
 }
 
 type Proyecto {
@@ -96,10 +134,9 @@ type Avances {
   observaciones: String
 }
 
-input agregarAvance{
+input agregarAvance {
   id_estudiante: ID!
   nombre_estudiante: String!
   descripcion: String!
   observaciones: String
-
 }

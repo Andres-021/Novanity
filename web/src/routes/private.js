@@ -7,6 +7,17 @@ const PrivateRoute = ({component: Component, ...rest}) => {
     auth
     ? <Outlet />
     : <Navigate to='/login'/>
+    // <Route {...rest} render = {(props) => 
+    //   auth ? (<Component {...props}/>
+    //     ):(
+    //       <Navigate to={{
+    //         pathname: '/login',
+    //         state: {from: props.location}
+    //       }}
+    //       />
+    //     )
+    //   }
+    // />
   );
 };
 

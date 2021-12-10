@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import RouteApp from './routes/routeApp';
 import reportWebVitals from './reportWebVitals';
 import {ApolloProvider} from "@apollo/client";
 
@@ -9,7 +9,7 @@ import client from './apollo.js';
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <RouteApp />
   </ApolloProvider>,
   document.getElementById('root')
 );

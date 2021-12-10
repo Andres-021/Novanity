@@ -12,11 +12,15 @@ import {
 
 const NavBar = () => {
 
-  // Obtenemos los datos del localStorage, luego los parseamos en un json y guardamos en una const.
-  const userJson = localStorage.getItem('user');
   const navigate = useNavigate();
 
+  // Obtenemos los datos del localStorage, luego los parseamos en un json 
+  // y guardamos en una const para reutilizar en el codigo.
+  const userJson = localStorage.getItem('user')
   const user = JSON.parse(userJson)
+
+  // --- Si vas a obtener algunos datos de user, es asi: ---
+  // user._id o user.nombre o user.estado o user.rol
 
   const logout = () => {
     // En caso de presionar el logout se limpiara el storage y redireccionara al login.
@@ -27,7 +31,7 @@ const NavBar = () => {
   return(
     <Navbar fixed="top" expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/#">Novanity</Navbar.Brand>
+        <Navbar.Brand href="/">Novanity</Navbar.Brand>
         <Nav className="justify-content-center" justify variant="pills" defaultActiveKey="/">
           
           {}
@@ -38,7 +42,7 @@ const NavBar = () => {
             }
           >
             {/* Ruta home */}
-            <Nav.Link href="/#">
+            <Nav.Link href="/">
               <img src="https://img.icons8.com/material-outlined/34/ffffff/home--v2.png"/>
             </Nav.Link>
           </OverlayTrigger>

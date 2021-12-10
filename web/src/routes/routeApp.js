@@ -1,15 +1,15 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 
-import Login from './pages/gestionUsuario/authentication/login.js';
-import Home from './pages/home/home.js'
-import NotFound from './pages/notFound.js';
-import PrivateRoute from './routes/private.js';
+import Login from '../pages/gestionUsuario/login.js';
+import Home from '../pages/home/home.js'
+import NotFound from '../pages/notFound.js';
+import PrivateRoute from './private.js';
 
-import './styles/global.css';
+import '../styles/global.css';
 
 
 
-function App() {
+function RouteApp() {
   return (
     <Router>
       <Routes>
@@ -24,4 +24,4 @@ function App() {
   );
 }
 
-export default App;
+export default RouteApp;

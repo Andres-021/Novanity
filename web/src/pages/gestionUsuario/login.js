@@ -11,9 +11,9 @@ import {
   Button
 } from 'react-bootstrap'
 
-import '../../../styles/gestionUsuario/authentication/login.css';
-import Register from '../../../components/gestionUsuario/authentication/register';
-import Notification from '../../../components/shared/error';
+import '../../styles/gestionUsuario/login.css';
+import Register from '../../components/gestionUsuario/register';
+import Notification from '../../components/shared/error';
 
 
 

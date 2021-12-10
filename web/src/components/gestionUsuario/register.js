@@ -12,8 +12,8 @@ import {
 } from 'react-bootstrap';
 
 
-import Notification from '../../shared/error'
-import Notification2 from '../../shared/success';
+import Notification from '../shared/error'
+import Notification2 from '../shared/success';
 
 // Define mutation
 const REGISTER_USER = gql`
@@ -40,7 +40,12 @@ const Register = (props) => {
   const [password, setPassword] = useState('');
   //const [user, setUser] = useState(null);
 
-
+  const RenderMessage = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  }
 
   const handelRegister = (e) => {
     e.preventDefault();
@@ -48,18 +53,12 @@ const Register = (props) => {
     try{
 
       if(email === '' || id === '' || rol === '' || names === '' || password === ''){
-        setErrorMessage('Todos los campos son obligatorios.');
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
+        RenderMessage('Todos los campos son obligatorios.');
         return 0;
       }
 
       if(error){
-        setErrorMessage(error.message);
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
+        RenderMessage(error.message);
         return 0;
       }
 
@@ -89,9 +88,7 @@ const Register = (props) => {
       }
 
     }catch(e){
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
+      RenderMessage(e);
     }
   }
   

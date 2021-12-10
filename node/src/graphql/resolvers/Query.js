@@ -4,7 +4,6 @@ import "dotenv/config";
 // --- Modulos ---
 import Proyecto from "../../models/Proyecto.js";
 import Usuario from "../../models/Usuario.js";
-import Inscripcion from "../../models/InscripEstudiante.js";
 
 
 const Query = {
@@ -28,11 +27,10 @@ const Query = {
 
       if(user){
         const token = jwt.sign({
+          user: user._id,
           email: user.correo, 
-          id: user.cedula, 
+          password: user.contrasena,
           role: user.rol, 
-          name: user.nombre, 
-          contrasena: user.contrasena
         }, process.env.SECRET, {expiresIn:'1h'});
         
         return {
@@ -59,8 +57,16 @@ const Query = {
     return await Proyecto.find();
   },
 
-  inscripciones: async () => {
-    return await Inscripcion.find();
+  //Consulta en la que se filtran todos los proyectos de un lider, se debe ingresar id del lider.
+
+  proyectosLider: async (root, args) => {
+    return await Proyecto.find({ id_lider: args.id_lider });
+  },
+
+  //Busca proyecto filtrandolo por su id. Se debe ingresar el id del proyecto que se quiere buscar
+
+  proyectoId: async (root, args) => {
+    return await Proyecto.find({ _id: args._id });
   },
 };
 

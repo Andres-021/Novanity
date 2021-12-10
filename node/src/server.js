@@ -52,7 +52,7 @@ const permissions = shield({
     },
     Mutation: {
         editUsuario: and(isAuthenticated),
-        //createProyecto: and(isAuthenticated, canAddProjects)
+        createProyecto: and(isAuthenticated, canAddProjects)
     },
 });
 
