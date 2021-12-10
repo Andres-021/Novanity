@@ -4,10 +4,6 @@ import "dotenv/config";
 // --- Modulos ---
 import Proyecto from "../../models/Proyecto.js";
 import Usuario from "../../models/Usuario.js";
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c6195e7ba00843aa3f380a5c48b8d89cc69b5a6
 
 const Query = {
   login: async(_,{correo, contrasena}) => {
