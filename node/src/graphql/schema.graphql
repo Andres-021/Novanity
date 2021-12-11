@@ -6,6 +6,8 @@ type Query {
   proyectos: [Proyecto]
   proyectosLider(id_lider: ID!): [Proyecto]
   proyectoId(_id: ID!): [Proyecto]
+  usuarioId(_id: ID!): [Usuario]
+  usuariosRol(rol: String!): [Usuario]
 }
 
 type Login {
@@ -32,7 +34,7 @@ type InscripEstudiante {
 }
 
 type Mutation {
-  estadoUsuario(_id: ID! estado: String): Usuario
+  estadoUsuario(_id: ID!, estado: String): Usuario
   createUsuario(
     cedula: String
     nombre: String
@@ -41,7 +43,7 @@ type Mutation {
     rol: String
     estado: String
   ): Usuario
-  
+
   updateUsuario(
     _id: ID
     cedula: String!
