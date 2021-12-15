@@ -1,13 +1,5 @@
 import NavBar from "../../components/shared/navbar";
-import {
-  NetworkStatus,
-  useQuery,
-  useMutation,
-  gql,
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-} from "@apollo/client";
+import { NetworkStatus, useQuery, useMutation, gql } from "@apollo/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import {
@@ -57,11 +49,7 @@ const EDITAR_USUARIO = gql`
 `;
 
 function Profile() {
-  const [modalInsertar, setmodalInsertar] = useState(false);
   const [datoEnEdicion, setDatoEnEdicion] = useState(null);
-
-  //se ingresa id para filtrar manualmente
-
   const userJson = localStorage.getItem("user");
   const user = JSON.parse(userJson);
 
@@ -269,11 +257,6 @@ function Profile() {
   );
 }
 
-const client = new ApolloClient({
-  uri: "http://localhost:4000/",
-  cache: new InMemoryCache(),
-});
-
 const Perfil = () => {
   return (
     <>
@@ -281,9 +264,7 @@ const Perfil = () => {
       <NavBar />
       <a href="https://icons8.com/icon">Icons by Icons8</a>
 
-      <ApolloProvider client={client}>
-        <Profile />
-      </ApolloProvider>
+      <Profile />
     </>
   );
 };

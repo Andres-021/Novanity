@@ -58,7 +58,7 @@ const permissions = shield({
 export const server = new GraphQLServer({
   typeDefs: path.join(__dirname, "graphql/schema.graphql"),
   resolvers,
-  // middlewares: [permissions],
+  middlewares: [permissions],
   context: (req) => ({
     claims: checkToken(req),
   }),

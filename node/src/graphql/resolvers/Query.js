@@ -67,6 +67,17 @@ const Query = {
     return await Proyecto.find({ id_lider: args.id_lider });
   },
 
+  //proyectos estudiante
+
+  proyectosEstudiante: async (root, args) => {
+    const id_estudiante = args.id_estudiante;
+    let proyectos = await Proyecto.find();
+    proyectos = proyectos.filter((i) =>
+      i.inscripciones_estudiantes.some((e) => e.id_estudiante == id_estudiante)
+    );
+    return proyectos;
+  },
+
   //Busca proyecto filtrandolo por su id. Se debe ingresar el id del proyecto que se quiere buscar
 
   proyectoId: async (root, args) => {

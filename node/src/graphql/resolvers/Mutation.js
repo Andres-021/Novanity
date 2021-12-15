@@ -4,27 +4,35 @@ import Proyecto from "../../models/Proyecto.js";
 const Mutation = {
   // Resolver de createUsuario en el schema para realizar el registro
   // En el content estarian todos los datos de usuario
-  createUsuario: async (_, {cedula, nombre, correo, contrasena, rol, estado}) => {
-    const newUsuario = new Usuario({cedula, nombre, correo, contrasena, rol, estado });
+  createUsuario: async (
+    _,
+    { cedula, nombre, correo, contrasena, rol, estado }
+  ) => {
+    const newUsuario = new Usuario({
+      cedula,
+      nombre,
+      correo,
+      contrasena,
+      rol,
+      estado,
+    });
     return await newUsuario.save();
   },
 
   // updateUsuario: async (_,{content}) =>{
   //   return await Usuario.findByIdAndUpdate(_id, content);
   // },
-  
 
-  estadoUsuario: async(_,{_id, estado}) => {
-    try{
+  estadoUsuario: async (_, { _id, estado }) => {
+    try {
       // Se hace la busqueda del usuario a registrar en caso de encontrarlo retornamos los valores
-      const user = await Usuario.findByIdAndUpdate(_id, {'estado': estado})
+      const user = await Usuario.findByIdAndUpdate(_id, { estado: estado });
 
-      if(user){
-
-        return user
-      }else return null; // Si falla el if, user retorna null
+      if (user) {
+        return user;
+      } else return null; // Si falla el if, user retorna null
       // console.log(res);
-    }catch(e){
+    } catch (e) {
       return e;
     }
   },
@@ -53,32 +61,47 @@ const Mutation = {
       if (args.estado) {
         usuario.estado = args.estado;
       }
-      
+
       // Como antes de cambiar los datos se realiza una busquda, podemos comparar los roles
       // para asi saber cual elemento cambiar o modificar.
 
-      if(usuario.rol === 'Lider'){
+      if (usuario.rol === "Lider") {
         // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
         // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
-        await Proyecto.findByIdAndUpdate({'id_lider': args._id}, {'nombre_lider': args._id});
+        await Proyecto.findByIdAndUpdate(
+          { id_lider: args._id },
+          { nombre_lider: args._id }
+        );
       }
 
-      if(usuario.rol === 'Estudiante'){
-
-        await Proyecto.updateOne({'avances.id_estudiante': args._id}, // Buscamos por el id_estudiante en avances
-          {$set:{'avances.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
-            multi:true,
-            arrayFilters:[{'elem.id_estudiante': args._id}]
-        });
-        await Proyecto.updateOne({'inscripciones_estudiantes.id_estudiante': args._id},  // Buscamos por el id_estudiante en inscripciones
-          {$set:{'inscripciones_estudiantes.$[elem].nombre_estudiante': args.nombre}},{ // En todos los elemtos de nombre_e actualizamos por args.nombre
+      if (usuario.rol === "Estudiante") {
+        await Proyecto.updateOne(
+          { "avances.id_estudiante": args._id }, // Buscamos por el id_estudiante en avances
+          { $set: { "avances.$[elem].nombre_estudiante": args.nombre } },
+          {
+            // En todos los elemtos de nombre_e actualizamos por args.nombre
             multi: true,
-            arrayFilters:[{'elem.id_estudiante': args._id}]
-        });
+            arrayFilters: [{ "elem.id_estudiante": args._id }],
+          }
+        );
+        await Proyecto.updateOne(
+          { "inscripciones_estudiantes.id_estudiante": args._id }, // Buscamos por el id_estudiante en inscripciones
+          {
+            $set: {
+              "inscripciones_estudiantes.$[elem].nombre_estudiante":
+                args.nombre,
+            },
+          },
+          {
+            // En todos los elemtos de nombre_e actualizamos por args.nombre
+            multi: true,
+            arrayFilters: [{ "elem.id_estudiante": args._id }],
+          }
+        );
       }
 
       return await usuario.save(); // Se retorna elemento guardado.
-    }catch(e){
+    } catch (e) {
       return e;
     }
   },
@@ -121,6 +144,29 @@ const Mutation = {
       estado: args.estado,
     };
     proyecto.inscripciones_estudiantes.push(inscripcion);
+    return proyecto.save();
+  },
+
+  //Agregar avance
+
+  agregarAvance: async (root, args) => {
+    const proyecto = await Proyecto.findOne({ _id: args._id });
+    const avance = {
+      id_estudiante: args.id_estudiante,
+      nombre_estudiante: args.nombre_estudiante,
+      descripcion: args.descripcion,
+      observaciones: args.observaciones,
+    };
+    proyecto.avances.push(avance);
+    return proyecto.save();
+  },
+
+  //agregar observacion de avance
+  agregarObservacionAvance: async (root, args) => {
+    const proyecto = await Proyecto.findOne({ _id: args.id_proyecto });
+    const buscar = (i) => i._id == args.id_avance;
+    const observaciones = proyecto.avances.find(buscar);
+    observaciones.observaciones = args.nuevaObservacion;
     return proyecto.save();
   },
 
@@ -179,7 +225,7 @@ const Mutation = {
       proyecto.fecha_ini = args.fecha_ini;
     }
     if (args.fecha_final) {
-      proyectofecha_final = args.fecha_final;
+      proyecto.fecha_final = args.fecha_final;
     }
 
     if (args.id_lider) {

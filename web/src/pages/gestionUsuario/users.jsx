@@ -1,13 +1,5 @@
 import NavBar from "../../components/shared/navbar";
-import {
-  NetworkStatus,
-  useQuery,
-  useMutation,
-  gql,
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-} from "@apollo/client";
+import { NetworkStatus, useQuery, useMutation, gql } from "@apollo/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import {
@@ -44,9 +36,6 @@ const EDITAR_USUARIO = gql`
 `;
 
 function Listausuarios() {
-  const [estado, setestado] = useState("");
-
-  const [modalInsertar, setmodalInsertar] = useState(false);
   const [datoEnEdicion, setDatoEnEdicion] = useState(null);
 
   const queryUsuarios = useQuery(USUARIOS, {
@@ -238,11 +227,6 @@ function Listausuarios() {
   );
 }
 
-const client = new ApolloClient({
-  uri: "http://localhost:4000/",
-  cache: new InMemoryCache(),
-});
-
 const Users = () => {
   return (
     <>
@@ -250,9 +234,7 @@ const Users = () => {
       <NavBar />
       <a href="https://icons8.com/icon">Icons by Icons8</a>
 
-      <ApolloProvider client={client}>
-        <Listausuarios />
-      </ApolloProvider>
+      <Listausuarios />
     </>
   );
 };
