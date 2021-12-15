@@ -8,60 +8,61 @@ import {
   Row,
   Col,
   Button,
-  Modal
+  Modal,
+  Alert,
+  ListGroup
 } from 'react-bootstrap';
+import _find from 'lodash/find';
 
+// Utils
+import queries from '../../utils/queryAuth';
 
-import Notification from '../shared/error'
-import Notification2 from '../shared/success';
-
-// Define mutation
-const REGISTER_USER = gql`
-  # Increments a back-end counter and gets its resulting value
-  mutation createUsuario($cedula: String!, $nombre: String!, $correo: String!, $contrasena: String!, $rol: String!, $estado: String!){
-    createUsuario(cedula: $cedula, nombre: $nombre, correo: $correo, contrasena: $contrasena, rol: $rol, estado: $estado){
-      correo
-    }
-  }
-`;
 
 const Register = (props) => {
-// const Register = ({show, showC}) => {
+  // const Register = ({show, showC}) => {
 
-  const [register, { data, loading, error }] = useMutation(REGISTER_USER);
-  
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [register, { data, loading, reset }] = useMutation(queries.mutation.createUser);
+
+  const [message, setMessage] = useState([]);
+  const [success, setSuccess] = useState(null);
+  // const [key, setKey] = useState(null);
 
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [rol, setRol] = useState('');
   const [names, setNames] = useState('');
   const [password, setPassword] = useState('');
-  //const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
-  const RenderMessage = (message) => {
-    setErrorMessage(message);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
+
+
+  if(!loading){
+    if(data !== undefined){
+      const {errors, success} = data.createUsuario;
+      if(!success){
+        setMessage(errors);
+
+      }else{
+        // Si el registro es correcto limpiamos los datos
+        setSuccess('Registro exitoso.');
+        setTimeout(() => {
+          setSuccess(null);
+        }, 5000);
+
+        setEmail('');
+        setId('');
+        setRol('');
+        setNames('');
+        setPassword('');
+      }
+      reset();
+    }
   }
 
-  const handelRegister = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
     
     try{
-
-      if(email === '' || id === '' || rol === '' || names === '' || password === ''){
-        RenderMessage('Todos los campos son obligatorios.');
-        return 0;
-      }
-
-      if(error){
-        RenderMessage(error.message);
-        return 0;
-      }
-
       register({ variables: {
           cedula: id,
           nombre: names,
@@ -71,24 +72,9 @@ const Register = (props) => {
           estado: 'Pendiente'
       }});
 
-      
-      if(data !== null){
-        setSuccessMessage('Se ha registrado correctamente');
-        setTimeout(() => {
-          setSuccessMessage(null);
-        }, 5000);
-        
-        setEmail('');
-        setId('');
-        setRol('');
-        setNames('');
-        setPassword('');
-
-        return 0;
-      }
-
+      setMessage([])
     }catch(e){
-      RenderMessage(e);
+      console.log(e);
     }
   }
   
@@ -102,28 +88,53 @@ const Register = (props) => {
       <Modal.Body className="show-grid">
         <Container className='first_container'>
           <Row className='justify-content-center'>
-            <div>
-              <Notification message={errorMessage}/>
-              <Notification2 message={successMessage}/>
+            <div className="mb-3">
+              {
+                success
+                ? <ListGroup.Item variant="success">{success}</ListGroup.Item>
+                : null
+              }
             </div>
-            <Form onSubmit={handelRegister}>
+            <Form onSubmit={handleRegister}>
             <Col xs={6} md='12' className='third_container'>
                 <FloatingLabel
                   controlId="floatingInput"
                   label="Correo"
                   className="mb-3"
                 >
-                  <Form.Control value={email} type="email" placeholder="name@example.com" onChange={(e) => {setEmail(e.target.value)}}/>
+                  <Form.Control value={email} type="email" placeholder="name@example.com" onChange={(e) => {setEmail(e.target.value)}} 
+                    required  isInvalid={!message.length? null: _find(message, {path:'correo'})? true: false}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {
+                      message.map((error) => {
+                        if(error.path === 'correo') return `${error.message}`;
+                        return null;
+                      }
+                      )
+                    }
+                  </Form.Control.Feedback>
                 </FloatingLabel>
                 {}
-                <Row>
+                <Row className="g-2">
                   <Col>
                     <FloatingLabel 
                       controlId="floatingId" 
                       label="Identificacion"
                       className="mb-3"
                     >
-                      <Form.Control value={id} type="text" placeholder="Identificacion" onChange={(e) => {setId(e.target.value)}}/>
+                      <Form.Control value={id} type="text" placeholder="Identificacion" onChange={(e) => {setId(e.target.value)}}
+                        required  isInvalid={!message.length? null: _find(message, {path:'cedula'})? true: false}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {
+                          message.map((error) => {
+                            if(error.path === 'cedula') return `${error.message}`;
+                            return null;
+                          }
+                          )
+                        }
+                      </Form.Control.Feedback>
                     </FloatingLabel>
                   </Col>
                   <Col>
@@ -132,12 +143,23 @@ const Register = (props) => {
                       label="Selecciona un rol"
                       className="mb-3"
                     >
-                      <Form.Select value={rol} aria-label="Floating label select example" onChange={(e) => {setRol(e.target.value)}}>
+                      <Form.Select value={rol} aria-label="Floating label select example" onChange={(e) => {setRol(e.target.value)}}
+                        required  isInvalid={!message.length? null: _find(message, {path:'rol'})? true: false}
+                      >
                         <option>...</option>
                         <option value="Estudiante">Estudiante</option>
                         <option value="Lider">Lider</option>
                         <option value="Administrador">Administrador</option>
                       </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {
+                          message.map((error) => {
+                            if(error.path === 'rol') return `${error.message}`;
+                            return null;
+                          }
+                          )
+                        }
+                      </Form.Control.Feedback>
                     </FloatingLabel>
                   </Col>
                 </Row>            
@@ -148,7 +170,18 @@ const Register = (props) => {
                   label="Nombre completo"
                   className="mb-3"
                 >
-                  <Form.Control value={names} type="text" placeholder="Nombre completo" onChange={(e) => {setNames(e.target.value)}}/>
+                  <Form.Control value={names} type="text" placeholder="Nombre completo" onChange={(e) => {setNames(e.target.value)}}
+                    required  isInvalid={!message.length? null: _find(message, {path:'nombre'})? true: false}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {
+                      message.map((error) => {
+                        if(error.path === 'nombre') return `${error.message}`;
+                        return null;
+                      }
+                      )
+                    }
+                  </Form.Control.Feedback>
                 </FloatingLabel>
                 {}
                 <FloatingLabel 
@@ -156,14 +189,29 @@ const Register = (props) => {
                   label="Contraseña"
                   className="mb-3"
                 >
-                  <Form.Control value={password} type="password" placeholder="Contraseña" onChange={(e) => {setPassword(e.target.value)}}/>
+                  <Form.Control value={password} type="password" placeholder="Contraseña" onChange={(e) => {setPassword(e.target.value)}}
+                    required  isInvalid={!message.length? null: _find(message, {path:'contrasena'})? true: false}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {
+                      message.map((error) => {
+                        if(error.path === 'contrasena') return `${error.message}`;
+                        return null;
+                      }
+                      )
+                    }
+                  </Form.Control.Feedback>
                 </FloatingLabel>
             </Col>
             <Col>
               {
                 loading
-                  ?  <Button variant='primary' type='submit'>Loading...</Button>
-                  :  <Button variant='primary' type='submit'>Registrarse</Button>
+                  ?  <Button variant='primary' disabled>Loading...</Button>
+                  :  <Button 
+                        variant='primary' 
+                        type='submit'
+                        disabled={email === '' || id === '' || rol === '' || names === '' || password === ''}
+                      >Registrarse</Button>
               }
             </Col>
             </Form>

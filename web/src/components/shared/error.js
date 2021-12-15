@@ -7,11 +7,11 @@ const Notification = ({message}) => {
 
   return(
     <>
-      {
-        message
-          ?  <Alert key='danger' variant='danger'>{message}</Alert>
-          : null
-      }
+      <Alert key='danger' variant='danger'>{
+      message.map(()=>{
+        
+      })
+      }</Alert>
     </>
   );
 }

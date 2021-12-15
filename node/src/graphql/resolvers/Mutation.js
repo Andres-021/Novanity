@@ -1,12 +1,81 @@
+import bcrypt from 'bcrypt';
+
+// -- Modulos --
 import Usuario from "../../models/Usuario.js";
 import Proyecto from "../../models/Proyecto.js";
+import auth from '../../auth.js';
+
+const formatErrors = (error, otherErrors) => {
+  const errors = error.errors;
+  let objErrors = []
+
+  // Si errors es indefinido significa que no hubo problema con el try
+  // entonces retornamos otherErrors
+  if(errors){
+    Object.entries(errors).map(error =>{
+      const {path, message} = error[1];
+      objErrors.push({path, message})
+    });
+    // Concatenamos para mostrar los errores juntos
+    objErrors = objErrors.concat(otherErrors);
+    return objErrors;
+  }else if(otherErrors.length){
+    return otherErrors;
+  }
+  
+
+  const unknowError = {}
+  // Pero si ningun if anterior sucede, buscamos el caso de error
+  // Esto es solo si no obtenemos ningun error anterior o es un error no visible
+  switch(error.code){
+    case 11000:
+      unknowError.path = 'correo'
+      unknowError.message = 'El correo ya se encuentra en uso.'
+      //console.log(objErrors)
+      break;
+
+    default:
+      unknowError.path = 'Desconocido'
+      unknowError.message = error.message
+  }
+
+  return [unknowError];
+}
 
 const Mutation = {
+  login: async(_,{correo, contrasena})  => auth.login(correo, contrasena, Usuario),
   // Resolver de createUsuario en el schema para realizar el registro
   // En el content estarian todos los datos de usuario
-  createUsuario: async (_, {cedula, nombre, correo, contrasena, rol, estado}) => {
-    const newUsuario = new Usuario({cedula, nombre, correo, contrasena, rol, estado });
-    return await newUsuario.save();
+  createUsuario: async (_, {correo, cedula, nombre, contrasena, rol, estado}) => {
+    
+    const otherErrors = []
+    try{
+
+      if(contrasena.length<8){
+        otherErrors.push({path: 'contrasena', message: 'La contraseña debe tener minimo 8 caracteres.'})
+      }
+
+      if(otherErrors.length){
+        throw otherErrors;
+      }
+      
+      // Creacion de hash para contraseña
+      const hashpassword = await bcrypt.hash(contrasena, 10);
+      const user = await Usuario.create({cedula, nombre, correo, contrasena: hashpassword, rol, estado });
+
+      return {
+        // Como en el schema de usuario el email es unique
+        // Si intentan introducir un email repetido success sera falso, de lo contrario tru
+        success: user && user._id? true: false,
+        errors: []
+      }
+    }catch(e){
+      //console.log(e)
+      return {
+        success: false,
+        errors: formatErrors(e, otherErrors)
+      }
+    }
   },
 
   // updateUsuario: async (_,{content}) =>{

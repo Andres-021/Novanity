@@ -18,7 +18,7 @@ function RouteApp() {
             <Route path='/' element={<Home/>}/>
           </Route>
           <Route exact path='/login' element={<Login/>}/>
-          <Route path='*' element={<NotFound/>}/>y
+          <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>
   );

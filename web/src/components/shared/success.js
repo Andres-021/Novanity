@@ -3,13 +3,13 @@ import {
   Alert
 } from 'react-bootstrap'
 
-const Notification2 = ({message}) => {
+const Notification2 = ({message, key}) => {
 
   return(
     <>
       {
         message
-          ?  <Alert key='success' variant='success'>{message}</Alert>
+          ?  <Alert key={key} variant={key}>{message}</Alert>
           : null
       }
     </>

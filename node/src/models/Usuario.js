@@ -1,4 +1,6 @@
 import pkg from "mongoose";
+import validate from 'mongoose-validator';
+
 const { Schema, model } = pkg;
 
 //import {Schema, model} from "mongoose";
@@ -7,6 +9,17 @@ const usuarioSchema = new Schema({
   cedula: {
     type: String,
     required: true,
+    validate: [
+      validate({
+        validator: 'isLength',
+        arguments: [7, 10],
+        message: 'La cedula debe tener entre {ARGS[0]} y {ARGS[1]} numeros.'
+      }),
+      validate({
+        validator: 'isNumeric',
+        message: 'La cedula debe contener solo numeros.'
+      })
+    ]
   },
 
   nombre: {
@@ -16,13 +29,19 @@ const usuarioSchema = new Schema({
 
   correo: {
     type: String,
-    required: true,
+    required: [true, "El correo ya se encuentra en uso."],
+    unique: true,
+    validate: validate({
+      validator: 'isEmail',
+      message: 'Introduce un email valido.'
+    })
   },
 
   contrasena: {
     type: String,
     required: true,
   },
+
   rol: {
     type: String,
     required: true,

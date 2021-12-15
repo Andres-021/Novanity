@@ -1,17 +1,22 @@
 scalar Date
 
 type Query {
-  login(correo: String!, contrasena: String!): Login
   usuarios: [Usuario!]
   proyectos: [Proyecto]
   proyectosLider(id_lider: ID!): [Proyecto]
   proyectoId(_id: ID!): [Proyecto]
 }
 
-type Login {
+type Error {
+  path: String!
+  message: String!
+}
+
+type Response {
   success: Boolean!
-  user: Usuario
   token: String
+  user: Usuario
+  errors: [Error]
 }
 
 type Usuario {
@@ -32,6 +37,7 @@ type InscripEstudiante {
 }
 
 type Mutation {
+  login(correo: String!, contrasena: String!): Response
   estadoUsuario(_id: ID! estado: String): Usuario
   createUsuario(
     cedula: String
@@ -40,7 +46,7 @@ type Mutation {
     contrasena: String
     rol: String
     estado: String
-  ): Usuario
+  ): Response
   
   updateUsuario(
     _id: ID
