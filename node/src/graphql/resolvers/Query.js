@@ -35,7 +35,6 @@ const Query = {
   },
 
   //busca usuario por id
-
   usuarioId: async (root, args) => {
     return await Usuario.find({ _id: args._id });
   },

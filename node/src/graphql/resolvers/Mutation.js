@@ -101,6 +101,10 @@ const Mutation = {
     try {
       const usuario = await Usuario.findOne({ _id: args._id });
 
+     // Creacion de hash para contraseña
+     // Obtenemos la nueva contraseña y a encriptamos
+      const hashpassword = await bcrypt.hash(args.contrasena, 10);
+
       if (args.nombre) {
         usuario.nombre = args.nombre;
       }
@@ -112,7 +116,8 @@ const Mutation = {
       }
 
       if (args.contrasena) {
-        usuario.contrasena = args.contrasena;
+        // Guardamos la contraseña encriptada
+        usuario.contrasena = hashpassword;
       }
       if (args.rol) {
         usuario.rol = args.rol;

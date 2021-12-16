@@ -26,8 +26,8 @@ const auth = {
       Query: {
         usuarios: and(isAuthenticated, isAdmin),
         proyectos: and(isAuthenticated),
-        proyectosLider: and(isAuthenticated, isLeader),
-        proyectosEstudiante: and(isAuthenticated, isStudent),
+        proyectosLider: and(isAuthenticated, or(isLeader, isAdmin)),
+        proyectosEstudiante: and(isAuthenticated, or(isStudent, isAdmin)),
       },
       Mutation: {
         editUsuario: and(isAuthenticated),
