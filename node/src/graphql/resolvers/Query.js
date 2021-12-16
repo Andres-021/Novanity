@@ -6,7 +6,7 @@ const Query = {
   usuarios: async () => {
     return await Usuario.find();
   },
-  
+
   proyectos: async () => {
     return await Proyecto.find();
   },
@@ -17,10 +17,33 @@ const Query = {
     return await Proyecto.find({ id_lider: args.id_lider });
   },
 
+  //proyectos estudiante
+
+  proyectosEstudiante: async (root, args) => {
+    const id_estudiante = args.id_estudiante;
+    let proyectos = await Proyecto.find();
+    proyectos = proyectos.filter((i) =>
+      i.inscripciones_estudiantes.some((e) => e.id_estudiante == id_estudiante)
+    );
+    return proyectos;
+  },
+
   //Busca proyecto filtrandolo por su id. Se debe ingresar el id del proyecto que se quiere buscar
 
   proyectoId: async (root, args) => {
     return await Proyecto.find({ _id: args._id });
+  },
+
+  //busca usuario por id
+
+  usuarioId: async (root, args) => {
+    return await Usuario.find({ _id: args._id });
+  },
+
+  //filtra usuarios por rol
+
+  usuariosRol: async (root, args) => {
+    return await Usuario.find({ rol: args.rol });
   },
 };
 

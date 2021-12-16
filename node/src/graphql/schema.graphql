@@ -3,8 +3,11 @@ scalar Date
 type Query {
   usuarios: [Usuario!]
   proyectos: [Proyecto]
-  proyectosLider(id_lider: ID!): [Proyecto]
+  proyectosLider(id_lider: String!): [Proyecto]
   proyectoId(_id: ID!): [Proyecto]
+  usuarioId(_id: ID!): [Usuario]
+  proyectosEstudiante(id_estudiante: String): [Proyecto]
+  usuariosRol(rol: String!): [Usuario]
 }
 
 type Error {
@@ -69,9 +72,15 @@ type Mutation {
 
   addAvance(_id: String, content: agregarAvance!): Avances
 
+  agregarObservacionAvance(
+    id_proyecto: String!
+    id_avance: String!
+    nuevaObservacion: String!
+  ): Proyecto
+
   editEstadoInscripcion(
     id_proyecto: ID!
-    id_inscripcion: ID!
+    id_inscripcion: String!
     nuevoEstado: String!
   ): Proyecto
 
@@ -80,6 +89,13 @@ type Mutation {
     id_estudiante: String!
     nombre_estudiante: String!
     estado: String!
+  ): Proyecto
+
+  agregarAvance(
+    _id: ID!
+    id_estudiante: String!
+    nombre_estudiante: String!
+    descripcion: String!
   ): Proyecto
 
   createProyecto(

@@ -24,6 +24,7 @@ const Login = () =>{
   const [login, { data, loading, reset }] = useMutation(queries.mutation.loginUser);
   
   const [modalShow, setModalShow] = useState(false);
+  const [state, setState] = useState(null);
 
   // Login
   const [username, setUsername] = useState('');
@@ -40,12 +41,28 @@ const Login = () =>{
       if(!success){
         setMessage(errors)
       }else{
-        setUsername('');
-        setPassword('');
-        localStorage.setItem('token', token);
-        const userJson = JSON.stringify(user);
-        localStorage.setItem('user', userJson);
-        navigate('/');
+        if(user.rol === 'Admin' || user.estado === 'Autorizado'){
+          setUsername('');
+          setPassword('');
+          localStorage.setItem('token', token);
+          const userJson = JSON.stringify(user);
+          localStorage.setItem('user', userJson);
+          navigate('/');
+        }
+
+        if(user.estado === 'Pendiente'){
+          setState('Tu estado es -Pendiente- por favor espere a ser -Autorizado- he intente de nuevo mas tarde..');
+          setTimeout(() => {
+            setState(null);
+          }, 5000);
+        }
+
+        if(user.estado === 'No autorizado'){
+          setState('Lo sentimos pero le han negado la entrada al sitio.');
+          setTimeout(() => {
+            setState(null);
+          }, 5000);
+        }
       }
       
       reset();
@@ -93,6 +110,11 @@ const Login = () =>{
               {
                 message.length
                 ? <ListGroup.Item variant="danger">Usuario o contraseña invalidos.</ListGroup.Item>
+                : null
+              }
+              {
+                state 
+                ?  <ListGroup.Item variant='danger'>{state}</ListGroup.Item>    
                 : null
               }
             </Col>

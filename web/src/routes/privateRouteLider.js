@@ -1,17 +1,17 @@
 import {Navigate, Outlet} from 'react-router-dom';
 
 // function PrivateRoute () {
-const PrivateRouteAdmin = () => {
+const PrivateRouteLider = () => {
   
   const userJson = localStorage.getItem("user");
   const user = JSON.parse(userJson);
 
 
   return(
-    user.rol === "Admin"
+    user.rol === 'Lider' || user.rol === 'Admin'
     ? <Outlet />
     : <Navigate to='/'/>
   );
 };
 
-export default PrivateRouteAdmin;
+export default PrivateRouteLider;
