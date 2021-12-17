@@ -76,6 +76,19 @@ const NavBar = () => {
               </OverlayTrigger>
             ) : null
           }
+          {
+            user.rol === "Admin" || user.rol === "Lider" ? (
+              <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip id={"bottom"}>Estudiantes</Tooltip>}
+              >
+                {/* Ruta proyectos */}
+                <Nav.Link href="/studentUser">
+                  <img src="https://img.icons8.com/material-outlined/34/ffffff/conference-call.png"/>
+                </Nav.Link>
+              </OverlayTrigger>
+            ) : null
+          }
           <NavDropdown
             title={
               <img src="https://img.icons8.com/material-outlined/32/ffffff/sorting-options.png" />

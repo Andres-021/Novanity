@@ -131,7 +131,7 @@ const Mutation = {
       if (usuario.rol === "Lider") {
         // Tomamos el id del usuario que actualizo su perfil y lo buscamos en proyectos participados.
         // Luego en proyecto actualizamos el dato que cambio el usuario o edito en su perfil.
-        await Proyecto.findByIdAndUpdate(
+        await Proyecto.updateOne(
           { id_lider: args._id },
           { nombre_lider: args._id }
         );
