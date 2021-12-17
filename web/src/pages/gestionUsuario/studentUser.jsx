@@ -236,11 +236,8 @@ const StudentUser = () => {
       <NavBar />
       <a href="https://icons8.com/icon">Icons by Icons8</a>
       
-      <Row>
-        <Col>
-          <StudentList />
-        </Col>
-      </Row>
+
+      <StudentList />
     </Container>
   );
 };
